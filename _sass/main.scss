@@ -1,0 +1,19 @@
+@charset "utf-8";
+
+/* Colors */
+$background-color: #f8f7f9;
+$text-color: #40514e !default;
+$muted-text-color: $text-color !default;
+$primary-color: #6A6DCD !default;
+$border-color: mix($background-color, $text-color, 75%) !default;
+$footer-background-color: #A7A4E0 !default;
+$link-color: $primary-color !default;
+$masthead-link-color: $text-color !default;
+$masthead-link-color-hover: $text-color !default;
+$navicon-link-color-hover: mix($background-color, $text-color, 80%) !default;
+
+/* Grid */
+$right-sidebar-width-narrow: 130px !default;
+$right-sidebar-width: 230px !default;
+$right-sidebar-width-wide: 330px !default;
+  
