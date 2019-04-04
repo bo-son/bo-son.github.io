@@ -16,7 +16,7 @@ Dynamic convolution은 position-based attention이다.
 * 일부 채널의 weight를 공유하고 (lightweight), 
 * 타임스텝마다 서로 다른 컨볼루션 커널을 학습하여 (dynamic)
 
-파라미터 수와 시퀀스 길이 대비 계산복잡도를 줄였다. Content-based self-attention이 필수적이지 않다는 것을 보인 데 의미가 있다.
+파라미터 수와 시퀀스 길이 대비 계산복잡도를 줄였다. 현재 NLP에서 주류를 차지하는 content-based self-attention이 필수적이지 않다는 것을 보인 데 의미가 있다.
 
 <!--more-->
 
@@ -39,7 +39,7 @@ Context size에 대한 제한은 이론적으로 없으나, 현실적으로 long
 
 Temporal dimension이 $k$이고, $d$개의 channel이 있는 1D convolution 기준으로 생각하자.
 
-![DepthwiseConv]({{ '/assets/img/2019-04-05-pay_less_attention/depthwise-conv.png' | relative_url }}){: style="width: 600px;" .align-center}
+![DepthwiseConv]({{ '/assets/img/2019-04-05-pay_less_attention/depthwise-conv.png' | relative_url }}){: style="width: 620px;" .align-center}
 
 **Depthwise convolution**.&nbsp;&nbsp;&nbsp;&nbsp;먼저 채널마다 독립적으로 크기가 $(k, 1)$인 커널(width=$k$, channel size=1)을 사용하여 convolution을 진행하고, 각 채널에서 나온 아웃풋을 stack한다.
 
@@ -98,7 +98,7 @@ $$
 
 
 
-LightConv 레이어는 GLU와 output projection ($d \rightarrow d$) 레이어 사이에 쓰인다. (GLU operartion $H=A \times \sigma(B)$ 를 위해 GLU 레이어 전에는 $d \rightarrow 2d$로 project하는 레이어가 필요하다.) 
+LightConv 레이어는 GLU와 output projection ($d \rightarrow d$) 레이어 사이에 쓰인다. (GLU operation $H=A \times \sigma(B)$ 를 위해 GLU 레이어 전에는 $d \rightarrow 2d$로 project하는 레이어가 필요하다.) 
 
 
 
