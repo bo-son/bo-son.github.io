@@ -25,9 +25,7 @@ Dynamic convolution은 position-based attention이다.
 
 ### Self-attention
 
-$$
-\mathrm{Attention}(Q, K, V) = \mathrm{softmax}(\frac{QK^T}{\sqrt{d_k}})V
-$$
+&nbsp;&nbsp;&nbsp;&nbsp;$\mathrm{Attention}(Q, K, V) = \mathrm{softmax}(\frac{QK^T}{\sqrt{d_k}})V$
 
 Content-based attention으로, $Q$ (현재 타임스텝)과, $K$ (context의 다른 모든 요소들)의 scaled & normalized dot-product를 weight로 하여 weighted sum을 구한다. Multihead를 사용하여 각 헤드가 서로 다른 위치를 attend하고, $d_k$개의 feature에 걸쳐 서로 다른 attention weight을 학습할 수 있다. 
 
@@ -51,22 +49,18 @@ Temporal dimension이 $k$이고, $d$개의 channel이 있는 1D convolution 기�
 일반 convolution 대비 계산량을 대폭 줄일 수 있다.
 
 * 일반 conv: $d_{out} \times d_{in} \times g \times k $
-
 * Depthwise conv: $d_{in} \times g \times k$
-
 * Pointwise conv: $d_{out} \times g \times d_{in}​$
 
-  => $\frac{DC+PC}{\mathrm{Standard}} = \frac{1}{d_{out}} + \frac{1}{k}$
+&nbsp;&nbsp;&nbsp;&nbsp;=> $\frac{DC+PC}{\mathrm{Standard}} = \frac{1}{d_{out}} + \frac{1}{k}$
 
 마찬가지로, parameter 수도 대폭 줄일 수 있다.
 
 * 일반 conv: $d_{out} \times d_{in} \times k$
-
 * Depthwise conv: $d_{in} \times k$
-
 * Pointwise conv: $d_{out} \times d_{in}​$
 
-  => $\frac{DC+PC}{\mathrm{Standard}} = \frac{1}{d_{out}} + \frac{1}{k}$
+&nbsp;&nbsp;&nbsp;&nbsp;=> $\frac{DC+PC}{\mathrm{Standard}} = \frac{1}{d_{out}} + \frac{1}{k}$
 
 MultiModel Nets, Xception, MobileNets 등에 사용된다. 가벼워서 모바일에 유리하다.
 
@@ -86,9 +80,7 @@ MultiModel Nets, Xception, MobileNets 등에 사용된다. 가벼워서 모바�
 
 Depthwise convolution의 일종으로, 타임스텝(=position)마다 context element에  할당되는 weight가 달라지지 않는 fixed convolution이다. 커널 width $k$가 fixed context window에 해당된다. 
 
-$$
-\mathrm{LightConv}(X, W_{\lceil \frac{cH}{d} \rceil, \: :}, i, c) = \mathrm{DepthwiseConv}(X, \mathrm{softmax}(W_{\lceil \frac{cH}{d} \rceil, \: :}), i, c)
-$$
+&nbsp;&nbsp;&nbsp;&nbsp;$\mathrm{LightConv}(X, W_{\lceil \frac{cH}{d} \rceil, \: :}, i, c) = \mathrm{DepthwiseConv}(X, \mathrm{softmax}(W_{\lceil \frac{cH}{d} \rceil, \: :}), i, c)$
 
 **Weight sharing (Channel tying)**.&nbsp;&nbsp;&nbsp;&nbsp;$d$개의 채널 각각이 다른 파라미터를 쓰는 대신, $\frac{d}{H}$ 채널마다 파라미터를 공유하여 수를 줄인다. 즉 채널 $d$개를 $H$개의 블럭으로 나누는 셈이다. 이 경우 파라미터 수는 $\frac{d \times k}{\frac{d}{H}} = H \times k​$ 가 된다. 모든 채널을 tie하기도 한다 (H=1).
 
@@ -106,10 +98,7 @@ LightConv 레이어는 GLU와 output projection ($d \rightarrow d$) 레이어 �
 
 Lightweight convolution의 변형으로, 타임스텝마다 서로 다른 커널을 학습하기 때문에 weight가 달라진다는 점이 다르다. 이러한 dynamic 커널을 배우려면 일반적인 convolution으로는 메모리 부담이 크기 때문에 LightConv를 사용하여 파라미터 수를 줄였다. LightConv의 $W \in \mathbb{R}^{H \times k}$ 이기 때문에, 각 채널을 이 형태로 맵핑하는 함수 $f$ 가 필요하다. 간단하게는 $W^Q \in \mathbb{R}^{H \times k \times d}$의 linear 모듈을 사용할 수 있다.
 
-$$
-\mathrm{DynamicConv}(X, i, c) = \mathrm{LightConv}(X, f(X_i)_{h,:}, i, c) \\
-\mathrm{where\;\;}f: \mathbb{R}^d \rightarrow \mathbb{R}^{H \times k}
-$$
+&nbsp;&nbsp;&nbsp;&nbsp;$\mathrm{DynamicConv}(X, i, c) = \mathrm{LightConv}(X, f(X_i)_{h,:}, i, c) \\ \mathrm{where\;\;}f: \mathbb{R}^d \rightarrow \mathbb{R}^{H \times k}$
 
 **Self-attention과의 비교**.&nbsp;&nbsp;&nbsp;&nbsp;매 타임스텝마다 weight이 달라진다는 점은 같지만, self-attention은 context 전체에 대한 함수인 반면 DynamicConv는 오로지 현재 타임스텝에 대한 함수이다. 따라서 DynamicConv의 커널 계산 복잡도는 $O(N)$이다.
 
