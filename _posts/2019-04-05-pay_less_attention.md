@@ -9,6 +9,7 @@ tags:
     - "attention"
 ---
 
+[Wu et al. (ICLR 2019)](https://arxiv.org/abs/1901.10430)
 
 Dynamic convolution은 position-based attention이다.
 
@@ -50,7 +51,7 @@ Temporal dimension이 $k$이고, $d$개의 channel이 있는 1D convolution 기�
 
 * 일반 conv: $d_{out} \times d_{in} \times g \times k $
 * Depthwise conv: $d_{in} \times g \times k$
-* Pointwise conv: $d_{out} \times g \times d_{in}​$
+* Pointwise conv: $d_{out} \times g \times d_{in}$
 
 &nbsp;&nbsp;&nbsp;&nbsp;=> $\frac{DC+PC}{\mathrm{Standard}} = \frac{1}{d_{out}} + \frac{1}{k}$
 
@@ -58,7 +59,7 @@ Temporal dimension이 $k$이고, $d$개의 channel이 있는 1D convolution 기�
 
 * 일반 conv: $d_{out} \times d_{in} \times k$
 * Depthwise conv: $d_{in} \times k$
-* Pointwise conv: $d_{out} \times d_{in}​$
+* Pointwise conv: $d_{out} \times d_{in}$
 
 &nbsp;&nbsp;&nbsp;&nbsp;=> $\frac{DC+PC}{\mathrm{Standard}} = \frac{1}{d_{out}} + \frac{1}{k}$
 
@@ -82,7 +83,7 @@ Depthwise convolution의 일종으로, 타임스텝(=position)마다 context ele
 
 &nbsp;&nbsp;&nbsp;&nbsp;$\mathrm{LightConv}(X, W_{\lceil \frac{cH}{d} \rceil, \: :}, i, c) = \mathrm{DepthwiseConv}(X, \mathrm{softmax}(W_{\lceil \frac{cH}{d} \rceil, \: :}), i, c)$
 
-**Weight sharing (Channel tying)**.&nbsp;&nbsp;&nbsp;&nbsp;$d$개의 채널 각각이 다른 파라미터를 쓰는 대신, $\frac{d}{H}$ 채널마다 파라미터를 공유하여 수를 줄인다. 즉 채널 $d$개를 $H$개의 블럭으로 나누는 셈이다. 이 경우 파라미터 수는 $\frac{d \times k}{\frac{d}{H}} = H \times k​$ 가 된다. 모든 채널을 tie하기도 한다 (H=1).
+**Weight sharing (Channel tying)**.&nbsp;&nbsp;&nbsp;&nbsp;$d$개의 채널 각각이 다른 파라미터를 쓰는 대신, $\frac{d}{H}$ 채널마다 파라미터를 공유하여 수를 줄인다. 즉 채널 $d$개를 $H$개의 블럭으로 나누는 셈이다. 이 경우 파라미터 수는 $\frac{d \times k}{\frac{d}{H}} = H \times k$ 가 된다. 모든 채널을 tie하기도 한다 (H=1).
 
 **Softmax-normalization**.&nbsp;&nbsp;&nbsp;&nbsp;$W \in \mathbb{R}^{H \times k}$ 의 temporal dimension $(k)$ 에 softmax를 건다. 또한 DropConnect를 regularizer로 사용한다 (채널 내에서 temporal dim의 일부를 제거하는 셈). 
 
@@ -111,4 +112,4 @@ Lightweight convolution의 변형으로, 타임스텝마다 서로 다른 커널
   * 레이어당 parameter 감소 (레이어를 늘려서 전체 파라미터 수는 비슷함)
   * 런타임 20% 감소
 
-* Transformer-Big에서 인코더의 self-attention 모듈을 LightConv 또는 DynamicConv로 갈아끼우고, 디코더는 동일하게 사용하였다.
+* Transformer-Big에서 인코더/디코더의 self-attention 모듈을 LightConv 또는 DynamicConv로 갈아끼우고, encoder-decoder attention은 동일하게 사용하였다.
