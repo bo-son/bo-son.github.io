@@ -111,5 +111,3 @@ Lightweight convolution의 변형으로, 타임스텝마다 서로 다른 커널
   * 성능: self-attention baseline 대비 모두 개선되거나 비슷
   * 레이어당 parameter 감소 (레이어를 늘려서 전체 파라미터 수는 비슷함)
   * 런타임 20% 감소
-
-* Transformer-Big에서 인코더/디코더의 self-attention 모듈을 LightConv 또는 DynamicConv로 갈아끼우고, encoder-decoder attention은 동일하게 사용하였다.
