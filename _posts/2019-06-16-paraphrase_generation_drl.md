@@ -96,7 +96,7 @@ $$
 
 ## 유용한 훈련 기술들
 
-### Reward shaping
+### Reward shaping (as in [Yu et al., 2017](https://arxiv.org/abs/1609.05473))
 
 t=T에만 발생하는 sparse reward를 쓰면 좋지 않으므로 intermediate cumulative reward를 사용한다. 현재 position $t$ 까지 generate된 시퀀스는 given으로 받고, 다음 position $t +1$ 부터 끝까지의 시퀀스 N개를 MC sampling한 후 완성된 시퀀스에 대해 evaluator를 돌린다. N개의 샘플에 대한 평균을 내어position $t$ 에서의 intermediate reward로 사용한다.
 
@@ -124,7 +124,13 @@ IRL에만 쓰는 건 아니고, 논문에서는 supervised learning의 경우에
 
 ### Curriculum learning
 
-각 example에 diffulculty weight $w^k$ 를 부과하여 새로운 evaluator objective: $\mathcal{J}_{IRL-CL}^k(\phi) = w^k \mathcal{J}_{IRL}^k(\phi)$ 를 사용한다. Input X와 output Y 사이의 edit distance로 모든 input 샘플들의 랭킹을 매기고, reward scaling에서와 유사하게 랭킹을 구한다.
+각 example에 diffulculty weight $w^k$ 를 부과하여 새로운 evaluator objective를 사용한다.
+
+$$
+\mathcal{J}_{IRL-CL}^k(\phi) = w^k \mathcal{J}_{IRL}^k(\phi)
+$$
+
+Input X와 output Y 사이의 edit distance로 모든 input 샘플들의 랭킹을 매기고, reward scaling에서와 유사하게 랭킹을 구한다.
 
 $$
 p^k = \sigma(\delta_3 \cdot (0.5 - \frac{\mathrm{rank}(\mathcal{E}(X^k, Y^k))}{K})) \\
